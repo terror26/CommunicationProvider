@@ -7,7 +7,7 @@ import model.Request;
 import java.util.List;
 
 public interface Provider {
-    boolean processRequest(Request request, Account account);
+    boolean processRequest(Request request, Account account) throws Exception;
 
     List<ChannelEnum> getChannelsSupported();
 

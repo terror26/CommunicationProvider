@@ -25,10 +25,10 @@ public class SMSProvider implements Provider {
     }
 
     @Override
-    public boolean processRequest(Request request, Account account) {
+    public boolean processRequest(Request request, Account account) throws Exception {
         if(!ChannelValidator.validateRequest(request)) {
             logger.info("Validation failed for the request = " + request.getId());
-            return false;
+            throw new Exception("Validation failed Exception");
         }
         logger.info("Provider = " + this.getId() + " Processing request =" + request.toString() + " account credentials = " + account.toString());
         // API call to correct place

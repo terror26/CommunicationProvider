@@ -5,6 +5,7 @@ import model.Request;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ProviderController {
@@ -17,7 +18,7 @@ public class ProviderController {
 
     public boolean addProvider(Provider provider) {
         if (!validateProvider(provider)) {
-            logger.info("Error creating the provider " + provider.getId());
+            logger.log(Level.SEVERE, "Error creating the provider " + provider.getId());
             return false;
         }
         providerMap.put(provider.getId(), provider);
@@ -35,7 +36,7 @@ public class ProviderController {
     public boolean updateState(String id, boolean state) {
         Provider p = getProvider(id);
         if (p == null) {
-            logger.info("Error updating the state of unknown provider");
+            logger.log(Level.SEVERE, "Error updating the state of unknown provider");
             return false;
         }
         p.setProviderState(state);
@@ -46,7 +47,7 @@ public class ProviderController {
     public void updateProvider(Provider p1Updated) {
         Provider p = getProvider(p1Updated.getId());
         if (p1Updated == null) {
-            logger.info("Error updating the values of unknown provider , id= " + p1Updated.getId());
+            logger.log(Level.SEVERE, "Error updating the values of unknown provider , id= " + p1Updated.getId());
             return;
         }
         addProvider(p1Updated);
@@ -58,17 +59,17 @@ public class ProviderController {
         }
     }
 
-    public boolean processRequest(Request request) {
-        logger.info("Starting to process request = " +request.getId());
-        if(sendToCorrectProvider(request) ) {
+    public boolean processRequest(Request request) throws Exception {
+        logger.info("Starting to process request = " + request.getId());
+        if (sendToCorrectProvider(request)) {
             return true;
         }
         return false;
     }
 
-    private boolean sendToCorrectProvider(Request request) {
-        for(Provider p: providerMap.values()) {
-            if(p.providerState() && p.getChannelsSupported().contains(request.getChannelEnum())) { // if active
+    private boolean sendToCorrectProvider(Request request) throws Exception {
+        for (Provider p : providerMap.values()) {
+            if (p.providerState() && p.getChannelsSupported().contains(request.getChannelEnum())) { // if active
                 logger.info("provider selected for request = " + request.getId() + " = " + p.getId());
                 // find first as of now TODO : can be improved
                 return p.processRequest(request, getOneAccount(p));

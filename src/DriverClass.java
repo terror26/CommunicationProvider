@@ -6,6 +6,7 @@ import service.ProviderController;
 import service.impl.SMSProvider;
 
 import java.util.Arrays;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DriverClass {
@@ -30,7 +31,7 @@ public class DriverClass {
             providerController.addProvider(p2);
 
             if (providerController.getProvider(p1.getId()) == null) {
-                logger.info("Error finding the p1");
+                logger.log(Level.SEVERE,"Error finding the p1");
             }
 
             providerController.updateState(p1.getId(), false); // p1 disabling
@@ -52,12 +53,21 @@ public class DriverClass {
             providerController.printProvider(); //
 
 
-            //sender, receiver, subject and message
-            boolean r1Result = providerController.processRequest(r1);
-            logger.info("r1Result = " + r1Result);
-            boolean r2Result = providerController.processRequest(r2);
-            logger.info("r2Result = " + r1Result);
-        } catch ( Exception err) {
+            // 2 requests triggered
+            try {
+                boolean r1Result = providerController.processRequest(r1);
+                logger.info("r1Result = " + r1Result);
+            } catch (Exception e) {
+                logger.log(Level.SEVERE, "failed to process request = " + r1.getId() + " reason : = " + e.getMessage());
+            }
+            try {
+                boolean r2Result = providerController.processRequest(r2);
+                logger.info("Request = r2  result = " + r2Result);
+            } catch (Exception e) {
+                logger.log(Level.SEVERE, "failed to process request = " + r2.getId() + " reason : = " + e.getMessage());
+            }
+
+        } catch (Exception err) {
             logger.info(err.getMessage());
         }
     }
