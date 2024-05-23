@@ -67,6 +67,8 @@ public class DriverClass {
                 logger.log(Level.SEVERE, "failed to process request = " + r2.getId() + " reason : = " + e.getMessage());
             }
 
+            // For callback we can add rest Api which will be called by the providers once they successfully process the msg in seperate call. To keep it decoupled we assume comms passed.
+
         } catch (Exception err) {
             logger.info(err.getMessage());
         }
